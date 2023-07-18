@@ -2,18 +2,19 @@ import netCDF4 as nc
 from netCDF4 import Dataset
 import numpy as np
 
-from copy_data_to_netcdf import copy_data_to_netcdf_adcp, copy_data_to_netcdf_ps
+from copy_data_to_netcdf import extract_data_to_netcdf
 import parameters
 
-pkl_file_adcp = parameters.pkl_file_adcp
-pkl_file_ps = parameters.pkl_file_ps
+pkl_file = parameters.pkl_file
 ncfile_path = parameters.ncfile_path
 
 ##---------------------------------------------------------------------------------------------------------------------------
 
 # Creating a new Dataset
-try: ncfile.close()
-except: pass
+try: 
+    ncfile.close()
+except: 
+    pass
 ncfile = nc.Dataset('ncfile_path', mode = 'w', format = 'NETCDF4_CLASSIC')
 
 ##---------------------------------------------------------------------------------------------------------------------------
@@ -36,14 +37,14 @@ ncfile.comment = 'instrument frequency 4Hz'
 ##---------------------------------------------------------------------------------------------------------------------------
 
 # Creating variables 
-time_adcp = ncfile.createVariable('time_adcp', np.float64, ('time_adcp',))
-surface_el_adcp = ncfile.createVariable('surface_el_adcp', np.float32, ('surface_el_adcp'))
-pressure_adcp = ncfile.createVariable('pressure_adcp', np.float32, ('pressure_adcp',))
+time_adcp = ncfile.createVariable('time_adcp', np.float64, ('time_adcp',), zlib=True)
+surface_el_adcp = ncfile.createVariable('surface_el_adcp', np.float32, ('surface_el_adcp'), zlib=True)
+pressure_adcp = ncfile.createVariable('pressure_adcp', np.float32, ('pressure_adcp',), zlib=True)
 
-time_ps = ncfile.createVariable('time_ps', np.float64, ('time_ps',))
-pressure_ps = ncfile.createVariable('pressure_ps', np.float32, ('pressure_ps',))
+time_ps = ncfile.createVariable('time_ps', np.float64, ('time_ps',), zlib=True)
+pressure_ps = ncfile.createVariable('pressure_ps', np.float32, ('pressure_ps',), zlib=True)
 
-time_buoy = ncfile.createVariable('time_buoy', np.float64, ('time_buoy',))
+time_buoy = ncfile.createVariable('time_buoy', np.float64, ('time_buoy',), zlib=True)
 
 ##---------------------------------------------------------------------------------------------------------------------------
 
@@ -55,19 +56,21 @@ surface_el_adcp.units = 'm'
 
 ##---------------------------------------------------------------------------------------------------------------------------
 
+# Defining attributes for variables
+time_adcp.source = '%Y%m%d %H:%M:%S.%f date format'
+surface_el_adcp.source = 'surface elevation measured by the AST component of the ADCP'
+pressure_adcp.source = 'pressure measured at the same time as surface elevation by a pressure sensor in the ADCP'
+
+time_ps.source = '%Y%m%d %H:%M:%S.%f date format'
+
+time_buoy.source = ''
+
+##---------------------------------------------------------------------------------------------------------------------------
+
 # Writing data
-copy_data_to_netcdf_adcp(pkl_file_adcp, ncfile_path)
-copy_data_to_netcdf_ps(pkl_file_ps, ncfile_path)
+# Select data
+extract_data_to_netcdf(pkl_file, ncfile_path)
 
-# Organise the data in the netcdf : Separation between ADCP / Pressure Sensor / buoy 
-adcp = ncfile.createVariable('adcp', np.float64, ('time_adcp', 'surface_el_adcp', 'pressure_adcp'), zlib=True)  # 3D variable for the ADCP data 
-ps = ncfile.createVariable('ps', np.float64, ('time_ps', 'pressure_ps'), zlib=True) # 2D variable for the Pressure Sensor data
-buoy = ncfile.createvariable('buoy', np.float64, ('time_buoy', '')) # variable for the buoy data
-
-
-adcp.source = 'Signature1000 Nortek, frequency 4Hz'
-ps.source = 'RBR'
-buoy.source = ''
 
 ##---------------------------------------------------------------------------------------------------------------------------
 
