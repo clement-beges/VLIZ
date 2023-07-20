@@ -18,13 +18,13 @@ except:
 ncfile = nc.Dataset('ncfile_path', mode = 'w', format = 'NETCDF4_CLASSIC')
 
 ##---------------------------------------------------------------------------------------------------------------------------
-
+'''
 # Creating dimensions
 time_dim = ncfile.createDimension('time', None)  
 surface_el_adcp = ncfile.createDimension('surface_el_adcp', None)  # Surface elevation measurements from the ADCP sensor
 pressure_adcp = ncfile.createDimension('press_adcp', None)  # Pressure conversion from the surface elevation using linear wave theory, ADCP sensor
 pressure_ps = ncfile.createDimension('pressure_ps', None)  # Pressure measurements from the Pressure Sensor
-
+'''
 
 ##---------------------------------------------------------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ ncfile.source = 'ADCP model: Signature1000 Nortek, Pressure sensor model: RBR, b
 ncfile.comment = 'instrument frequency 4Hz'
 
 ##---------------------------------------------------------------------------------------------------------------------------
-
+'''
 # Creating variables 
 time_adcp = ncfile.createVariable('time_adcp', np.float64, ('time_adcp',), zlib=True)
 surface_el_adcp = ncfile.createVariable('surface_el_adcp', np.float32, ('surface_el_adcp'), zlib=True)
@@ -64,7 +64,7 @@ pressure_adcp.source = 'pressure measured at the same time as surface elevation 
 time_ps.source = '%Y%m%d %H:%M:%S.%f date format'
 
 time_buoy.source = ''
-
+'''
 ##---------------------------------------------------------------------------------------------------------------------------
 
 # Writing data

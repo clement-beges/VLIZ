@@ -1,2 +1,2 @@
-pkl_file = "chemin_vers_votre_fichier.pkl"  # Replace by the path to the pkl file for the sensor
-ncfile_path = "chemin_vers_votre_fichier.nc"  # Replace by the path to the existing NetCDF file
+pkl_file = r'ncfile_path'  # Replace by the path to the pkl file for the sensor
+ncfile_path = r'D:/Infra_gravity_waves_datas/Trapegeer_8Feb_10Apr_2023_ADCP_PS_BUOYS/ADCP'  # Replace by the path to the existing NetCDF file
